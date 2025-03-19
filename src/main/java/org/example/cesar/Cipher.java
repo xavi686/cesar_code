@@ -1,7 +1,6 @@
 package org.example.cesar;
 
-import org.jetbrains.annotations.NotNull;
-
+import java.io.*;
 import java.util.HashMap;
 import java.util.function.BiFunction;
 
@@ -13,13 +12,13 @@ public class Cipher {
      */
     public static final char[] ALFABETO = {'ª',
             '0','1','2','3','4','5','6','7','8','9',
-            'a','b','c','d','e','f','g','h','i',
-            'j','k','l','m','n','ñ','o','p','q','r',
-            's','t','u','v','w','x','y','z','á','é',
-            'í','ó','ú','A','B','C','D','E','F','G','H','I',
-            'J','K','L','M','N','Ñ','O','P','Q','R',
-            'S','T','U','V','W','X','Y','Z','Á','É',
-            'Í','Ó','Ú','Ü',' ','.',','};
+            'a','b','c','d','e','f','g','h','i','j',
+            'k','l','m','n','ñ','o','p','q','r','s',
+            't','u','v','w','x','y','z','á','é','í',
+            'ó','ú','A','B','C','D','E','F','G','H',
+            'I','J','K','L','M','N','Ñ','O','P','Q',
+            'R','S','T','U','V','W','X','Y','Z','Á',
+            'É','Í','Ó','Ú','Ü',' ','.',','};
 
     /**
      * El método convertirAHashmap se encarga de crear el arreglo tipo HashMap del alfabeto y los carácteres especiales
@@ -53,16 +52,19 @@ public class Cipher {
 
     /**
      * Proceso que se encarga de cifrar/descifrar el mensaje
-     * @param processedLine variable tipo string que contiene una línea del mensaje a cifrar/descifrar
+     *
      * @param key variable tipo entero que contiene el número de clave de desplazamiento de las letras en el mensaje
-     * */
-//    public static void procesar(@NotNull String processedLine, int key, StringBuilder cifrado){
-    public static String procesar(@NotNull String processedLine, int key){
-        StringBuilder cifrado = new StringBuilder();
+     */
+    public static String procesar(StringBuilder cifrado, int key){
+        //Verifica si existe el archivo
+        StringBuilder cifrando = new StringBuilder();
         try{
-            if(key % (ALFABETO.length-1) != 0) {
-                for (char character : processedLine.toCharArray()) {
-                    int nuevaLetra;
+            BufferedReader reader = new BufferedReader(new StringReader(cifrado.toString()));
+            String processedLine;
+            while ((processedLine = reader.readLine()) != null) {
+                if(key % (ALFABETO.length-1) != 0) {//El problema está acá
+                    for (char character : processedLine.toCharArray()) {
+                        int nuevaLetra;
                         String permitidos = new String(ALFABETO);
                         if (permitidos.indexOf(character) == -1) {
                             //System.out.println("El carácter '" + character + "' no está dentro del arreglo permitido.");
@@ -72,13 +74,20 @@ public class Cipher {
                             nuevaLetra = desplazarLetra.apply(character, key);
                             character = ALFABETO[nuevaLetra]; //Verificación
                         }
-                    cifrado.append(character);
+                        cifrando.append(character);
+                    }
+                    cifrando.append(System.lineSeparator());
                 }
             }
-        }catch(ArrayIndexOutOfBoundsException e){ //Si no está contenido en el arreglo, finaliza el programa
-            System.out.println("Clave fuera de rango.");
+        } catch (IOException | ArrayIndexOutOfBoundsException e) {
+            //throw new RuntimeException(e);
+            System.out.println("Error al leer el archivo o clave fuera de rango.");
             System.exit(0);
         }
-        return cifrado.toString();
+        if(cifrando.toString().equals(""))
+            return cifrado.toString();
+        else
+            return cifrando.toString();
     }
 }
+

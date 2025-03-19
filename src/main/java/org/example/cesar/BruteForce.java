@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import static org.example.cesar.Cipher.ALPHABET;
+import static org.example.cesar.Cipher.procesar;
 import static org.example.cesar.FileManager.readFile;
 
 public class BruteForce {
@@ -17,18 +18,20 @@ public class BruteForce {
      * @param filePath contiene la ruta del archivo que se leerá para descencriptar
      */
     public static void decryptByBruteForce(String filePath) {
+        StringBuilder mensaje;
         for(int i = 0; i <= ALPHABET.size(); i++){
             try {
-                String mensaje = readFile(filePath, ALPHABET.size() - i); //decifrar
-                if(!mensaje.isEmpty()){
+                mensaje = readFile(filePath, ALPHABET.size() - i); //decifrar texto
+                String descifrar = procesar(mensaje, ALPHABET.size() - i);
+                if(!descifrar.isEmpty()){//lee la primera vez y luego lee el mensaje vacío
                     boolean claveEncontrada = false;
                     Set<String> keywords = getStrings();
-                    String[] words = mensaje.toLowerCase().split("\\W+");
+                    String[] words = descifrar.split("\\W+");
                     for (String word : words) {
                         if (keywords.contains(word)) {
                             System.out.println("CLAVE DE DESCIFRADO CÉSAR ES es: " + i + "\n");
                             claveEncontrada = true;
-                            System.out.println(mensaje);
+                            System.out.println(descifrar);
                             break;
                         }
                     }

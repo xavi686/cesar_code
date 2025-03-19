@@ -20,15 +20,15 @@ public class FileManager {
      * @throws IOException en caso de error en lectura del archivo se manejará la excepción, cargando el menú principal
      * reiniciando el programa.
      */
-    public static String readFile(String filePath, int key) throws IOException {
+    public static StringBuilder readFile(String filePath, int key) throws IOException {
     Path inputPath = Paths.get(filePath);
     StringBuilder cifrado = new StringBuilder();
     //Verifica si existe el archivo
     try (InputStream inputStream = Files.newInputStream(inputPath);
-         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));) {
         String processedLine;
         while ((processedLine = reader.readLine()) != null) {
-            cifrado.append(procesar(processedLine, key));
+            cifrado.append(processedLine);
             cifrado.append(System.lineSeparator()); //salto de línea
         }
     } catch (IOException | NullPointerException e) {
@@ -37,7 +37,7 @@ public class FileManager {
         System.out.println("Error al escribir en el archivo, \n no se escribió el nombre del archivo \n no existe o no se tiene acceso. \n" + e);
         menuPrincipal();
     }
-    return cifrado.toString();
+    return cifrado;
 }
 
 public static void writeFile(String content, String filePath) {

@@ -20,7 +20,7 @@ import static org.example.cesar.Menu.*;
 public class Validator {
 
     /**
-     * Extensiones con las que se desea trabajar
+     * Extensiones con las que se desea trabajar.
      */
     private static final String[] validExtensions = {"txt", "doc"};
 
@@ -64,7 +64,6 @@ public class Validator {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Entrada no válida. Debes ingresar un número entero.");
-                //entrada.next(); // Descarta el dato no valido de la entrada
                 getEntrada().next(); // Descarta el dato no valido de la entrada
                 menuPrincipal();
             }

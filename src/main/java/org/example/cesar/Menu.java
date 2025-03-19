@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import static org.example.cesar.BruteForce.decryptByBruteForce;
 import static org.example.cesar.Cipher.ALFABETO;
+import static org.example.cesar.Cipher.procesar;
 import static org.example.cesar.FileManager.readFile;
 import static org.example.cesar.FileManager.writeFile;
 import static org.example.cesar.Validator.*;
@@ -54,7 +55,7 @@ public class Menu {
         menuPrincipal();
         int opcion = esNumero();
         int key;
-        String mensaje;
+        StringBuilder mensaje;
         String modo;
         do {
             switch (opcion) {
@@ -70,8 +71,9 @@ public class Menu {
                                 setRutaArchivo(getEntrada().nextLine().trim());
                                 if (esRutaValida(getRutaArchivo()) && callValidExtension()) break;
                             }
-                            writeFile(mensaje, getRutaArchivo());
-                            System.out.println("\n" + "Mensaje: " + "\n" + mensaje + "\n");
+                            String codificado = procesar(mensaje, key);
+                            writeFile(procesar(mensaje, key), getRutaArchivo());
+                            System.out.println("\n" + "Mensaje: " + "\n" + codificado + "\n");
                             opcion = 0;
                         } else{
                             System.out.println("No hay información contenida en el archivo.\n");
@@ -87,8 +89,9 @@ public class Menu {
                     key = toValid(modo);
                     try {//try de descifrar con clave conocida
                         mensaje = readFile(getRutaArchivo().trim(), (ALFABETO.length-1) - (key%(ALFABETO.length-1))); //decifrar
+                        String codificado = procesar(mensaje, (ALFABETO.length-1) - (key%(ALFABETO.length-1)));
                         if(!mensaje.isEmpty()){
-                            System.out.println("\n" + "Mensaje: " + "\n" + mensaje);
+                            System.out.println("\n" + "Mensaje: " + "\n" + codificado);
                         } else {
                             System.out.println("No hay información contenida en el archivo.\n");
                         }
